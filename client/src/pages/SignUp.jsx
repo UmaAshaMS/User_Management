@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import OAuth from '../Components/OAuth'
 
 function SignUp() {
   const [formData, setFormData] = useState({})
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value })
   }
@@ -26,14 +28,12 @@ function SignUp() {
       setError(true);
       return;
     }
-    
+    navigate('/signin', { replace: true })
     }
     catch(error){
       setLoading(false)
       setError(true)
     }
-    
-
     }
   return (
     <div className='p-3 max-w-lg mx-auto h-screen'>
@@ -50,7 +50,7 @@ function SignUp() {
           type='email'
           id='email'
           className='bg-red-50 p-2.5 rounded-lg'
-          onChange={handleChange} />
+          onChange={handleChange} /> 
 
         <input
           placeholder='Password :'
@@ -60,14 +60,15 @@ function SignUp() {
           onChange={handleChange} />
 
         <div className='flex justify-center items-center'>
-          <button className='cursor-pointer bg-red-200 p-4 w-32 text-center rounded-lg'>{loading ? 'Loading...' : 'Sign in'}</button>
+          <button className='cursor-pointer bg-red-200 p-3 w-60  text-center rounded-full hover:bg-red-300 transition'>{loading ? 'Loading...' : 'Sign Up'}</button>
         </div>
-        {/* <button className='cursor-pointer'>SignIn via Google</button> */}
+        <OAuth />
       </form>
+      
       <div className='flex gap-2 mt-5'>
         <p>Already have an account ? </p>
-        <Link to='/signIn' >
-          <span className='text-blue-600 flex'>Sign Up </span>
+        <Link to='/signin' >
+          <span className='text-blue-500 flex'>Sign In </span>
         </Link>
       </div>
       <p className='text-red-600 mt-5'>{error && 'An error occured!!'}</p>
