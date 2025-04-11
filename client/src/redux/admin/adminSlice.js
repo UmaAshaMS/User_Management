@@ -34,10 +34,14 @@ const adminSlice = createSlice({
         },
         userUpdate: (state, action) => {
             const updatedUser = action.payload;
-            const index = state.users.findIndex(user => user._id === updatedUser._id);
-            if (index !== -1) {
-                state.users[index] = updatedUser;
-            }
+            state.users = state.users.map(user =>
+                user._id === updatedUser._id ? updatedUser : user
+            );
+            
+            // const index = state.users.findIndex(user => user._id === updatedUser._id);
+            // if (index !== -1) {
+            //     state.users[index] = updatedUser;
+            // }
         },
         deleteUser: (state, action) => {
             state.users = state.users.filter(user => user._id !== action.payload);

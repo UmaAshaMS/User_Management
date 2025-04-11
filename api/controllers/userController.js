@@ -32,3 +32,14 @@ export const updateUser = async(req, res) => {
     }
 }
 
+export const getUserDetails = async(req, res) => {
+    try{
+        const userId = req.params.userId
+        const user = await User.findById(userId)
+        res.json({user, message:'User details'})
+    }
+    catch(error){
+        console.log("Error in fetching updated userdetails: ",error)
+    }
+}
+

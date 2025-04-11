@@ -3,6 +3,7 @@ import { FaEdit, FaTrash } from 'react-icons/fa'; // FontAwesome
 import Swal from 'sweetalert2'
 import { useDispatch, useSelector } from 'react-redux';
 import { setUsers, userUpdate, deleteUser, addUserStart, addUserFailure, addUserSuccess } from '../../redux/admin/adminSlice';
+import {updateUser} from '../../redux/user/userSlice.js'
 
 
 function AdminDashboard() {
@@ -109,9 +110,13 @@ function AdminDashboard() {
             });
 
             const data = await res.json();
+            console.log('data after updtae : ',data)
             if (data.success) {
                 // update UI
                 dispatch(userUpdate(data.updatedUser))
+                
+                dispatch(updateUser(data.updatedUser)); // user slice
+                  
                 setEditingUser(null);
                 setNewUsername('')
                 setNewProfilePic(null);

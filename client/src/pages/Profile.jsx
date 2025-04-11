@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from "react-redux"
 import { signOut, updateUser } from '../redux/user/userSlice'
+
 
 function Profile() {
 
@@ -10,6 +11,24 @@ function Profile() {
   const dispatch = useDispatch()
   const { currentUser } = useSelector(state => state.user)
 
+  
+  useEffect(() => {
+    const getUserDetails = async () => {
+      try {
+        const res = await fetch(`/api/user/getUser/${currentUser._id}`);
+        const data = await res.json();
+        dispatch(updateUser(data.user)); 
+        console.log("updateduser",data)
+      } catch (err) {
+        console.log('Failed to fetch user data:', err);
+      }
+    };
+  
+    if (currentUser) {
+      getUserDetails();
+    }
+  }, []);
+  
   const handleSignout = async () => {
     try {
       await fetch('/api/user/signout');
@@ -27,42 +46,46 @@ function Profile() {
       const formData = new FormData();
       formData.append('username', username)
 
-      if(profilePicture){
+      if (profilePicture) {
         formData.append('profilePicture', profilePicture)
       }
 
-      console.log('dta passed from update : ',formData)
-      const res = await fetch(`/api/user/updateUser/${currentUser._id}`,{
-        method : 'PUT',
-        
-        body : formData
+      console.log('dta passed from update : ', formData)
+      const res = await fetch(`/api/user/updateUser/${currentUser._id}`, {
+        method: 'PUT',
+
+        body: formData
       });
 
       const data = await res.json()
       console.log(data)
-      if(data.success){
+      if (data.success) {
         dispatch(updateUser(data.updatedUser));
         setShowModal(false);
-        
+      
+
       }
     }
     catch (error) {
       console.log(error)
     }
   }
+
+
+
   return (
     <div className='flex flex-col justify-center items-center'>
       <h1 className='text-3xl font-bold text-center m-4 p-4'>My Profile</h1>
 
-      <img src={currentUser.profilePicture} alt='No image' className='rounded-full self-center w-24 h-24 '  />
+      <img src={currentUser.profilePicture} alt='No image' className='rounded-full self-center w-24 h-24 ' />
       <br></br>
       <p className='font-bold'>{currentUser.username}</p>
 
       <button onClick={handleSignout} className='w-32 bg-red-200 p-4 m -4 gap-2 rounded-full cursor-pointer hover:bg-red-300 transition'> Sign Out
       </button>
       <div>
-        <button className='w-32 text-red-600 cursor-pointer hover:text-black'>Delete Account</button>
-        <button onClick={() => {setUsername(currentUser.username); setShowModal(true)}} className='w-32 text-blue-700 cursor-pointer hover:text-black'>Update Profile</button>
+        {/* <button className='w-32 text-red-600 cursor-pointer hover:text-black'>Delete Account</button> */}
+        <button onClick={() => { setUsername(currentUser.username); setShowModal(true) }} className='w-32 text-blue-700 cursor-pointer hover:text-black'>Update Profile</button>
       </div>
 
       {/* Modal for Editing user profile*/}
@@ -83,7 +106,7 @@ function Profile() {
 
               <input
                 type='file'
-                placeholder = 'New Profile Picture : '
+                placeholder='New Profile Picture : '
                 onChange={(e) => setProfilePicture(e.target.files[0])}
                 className='border rounded p-2'
               />
