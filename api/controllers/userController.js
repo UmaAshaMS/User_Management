@@ -8,7 +8,7 @@ export const test = (req, res) => {
 };
 
 export const updateUser = async(req, res) => {
-    console.log('reached api ')
+    console.log('reached update user api')
     try{
         console.log(req.body)
         const {username} = req.body;

@@ -23,7 +23,7 @@ app.use(express.json()); //Inoreder to recieve json data
 app.listen(3000, () => {
     console.log('Server listening on port 3000!')
 })
-console.log(`Admin at : `  )
+// console.log(`Admin at : `  )
 
 app.use(cookieParser());
 app.use('/api/user', userRoute)
