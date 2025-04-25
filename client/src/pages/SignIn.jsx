@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import {signInStart, signInSuccess, signInFailure} from '../redux/user/userSlice';
+import {signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice';
 import {useDispatch, useSelector} from 'react-redux'
 import OAuth from '../Components/OAuth'
 
 function SignIn() {
   const [formData, setFormData] = useState({})
   const {loading, error} = useSelector((state) => state.user)
+  const [errormsg, setErrorMsg] = useState('')
 
   // console.log(loading, error)
    
@@ -19,6 +20,18 @@ function SignIn() {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
+
+    if(!formData.email || !formData.password){
+      setErrorMsg('All feilds are required!')
+      return
+    }
+
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
+    if(!emailPattern.test(formData.email)){
+      setErrorMsg('EmailID not valid!')
+      return
+    }
+
     try{
       dispatch(signInStart());
       const res = await fetch ('/api/auth/signin', {
@@ -49,7 +62,7 @@ function SignIn() {
   return (
     <div className=' max-w-lg mx-auto h-screen'>
       <h1 className='text-3xl text-center font-bold m-7'>Sign In</h1>
-      <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
+      <form onSubmit={handleSubmit} className='flex flex-col gap-4' noValidate>
 
         
         <input
@@ -83,6 +96,9 @@ function SignIn() {
         </Link>
       </div>
       <p className='text-red-600 mt-5'>{error ? error || 'Something went wrong!' : '' }</p>
+      <p className='text-red-600 mt-5'>{errormsg ? errormsg  : '' }</p>
+
+      
 
     </div>
   )

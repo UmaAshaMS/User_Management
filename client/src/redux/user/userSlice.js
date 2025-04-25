@@ -3,7 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     currentUser: null,
     loading: false,
-    error: false
+    error: false,
+    value : 0,
 };
 
 const userSlice = createSlice({
@@ -30,6 +31,7 @@ const userSlice = createSlice({
         updateUser: (state, action) => {
             state.currentUser = action.payload;
         },
+         
     }
 });
 

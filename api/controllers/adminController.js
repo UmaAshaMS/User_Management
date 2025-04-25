@@ -67,6 +67,12 @@ export const updateUser = async (req, res) => {
     try {
         const { username } = req.body;
 
+        //Check for existing username
+        const existingUserName = await User.findOne({username})
+        if(existingUserName){
+            return res.status(400).json({success:false, message:'Username already exists'})
+        }
+
         let profileUrl
 
         if (req.file) {
@@ -102,7 +108,13 @@ export const addUser = async(req, res) => {
         // Check if user already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.status(400).json({ success: false, message: 'User already exists' });
+            return res.status(400).json({ success: false, message: 'Email ID already registered' });
+        }
+
+        //Check if username exists
+        const existingUserName = await  User.findOne({username})
+        if(existingUserName){
+            return res.status(400).json({success : false, message : 'Username already exists'})
         }
 
         // Hash the password

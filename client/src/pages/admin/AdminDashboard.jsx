@@ -122,6 +122,10 @@ function AdminDashboard() {
                 setNewProfilePic(null);
                 Swal.fire('Updated!', 'User has been updated.', 'success');
             }
+            else{
+                Swal.fire("Error", "Username already Exists!", "error");
+                setEditingUser(null);
+            }
         } catch (error) {
             console.log('Admin update error:', error);
             Swal.fire('Error!', 'Something went wrong.', 'error');
@@ -152,11 +156,12 @@ function AdminDashboard() {
                 dispatch(addUserSuccess(data.newUser));
                 setShowAddForm(false);
                 console.log('add success')
-                // Swal.fire('Success', 'User added successfully', 'success');
+                Swal.fire('Success', 'User added successfully', 'success');
             } else {
                 dispatch(addUserFailure(data.message || 'Add failed'));
+                setShowAddForm(false);
                 console.log('add failed', data.message)
-                // Swal.fire('Error', data.message || 'Add failed', 'error');
+                Swal.fire('Error', data.message || 'Add failed', 'error');
             }
         } catch (error) {
             dispatch(addUserFailure(error.message));
